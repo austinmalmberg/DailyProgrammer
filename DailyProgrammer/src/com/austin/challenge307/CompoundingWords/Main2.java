@@ -38,7 +38,7 @@ public class Main2 {
 	    	.filter(l -> l.length() == minLength)
 	    	.map(s -> new ArrayDeque<>(Arrays.asList(s)))
 	    	.flatMap(Main2::buildRoute)
-	        .collect(Collectors.groupingBy(k -> k.size(), TreeMap::new,Collectors.toList()))
+	        .collect(Collectors.groupingBy(k -> k.size(), TreeMap::new, Collectors.toList()))
 	        .lastEntry().getValue().forEach(System.out::println);
 	    
 	    System.out.println(System.currentTimeMillis() - start);

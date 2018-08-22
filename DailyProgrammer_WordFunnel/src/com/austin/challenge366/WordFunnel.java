@@ -3,14 +3,12 @@ package com.austin.challenge366;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -24,14 +22,16 @@ import java.util.stream.Stream;
 
 public class WordFunnel {
 
-	public static final String DICTIONARY = "enable1.txt";
+	public static final String DICT_FILENAME = "enable1.txt";
 	public static Map<String, Set<String>> wordMap;
 	
 	public static void main(String[] args) throws IOException {
-		Set<String> words = Files.lines(Paths.get(DICTIONARY)).collect(Collectors.toCollection(TreeSet::new));
 		
-		initWordMap(words);
+		Set<String> wordset = Files.lines(Paths.get(DICT_FILENAME)).collect(Collectors.toCollection(HashSet::new));
 		
+		initWordMap(wordset);
+		
+		System.out.println("\n-----Is a subword?-----");
 		printfunnel("leave", "eave");
 		printfunnel("reset", "rest");
 		printfunnel("dragoon", "dragon");
@@ -39,24 +39,22 @@ public class WordFunnel {
 		printfunnel("sleet", "lets");
 		printfunnel("skiff", "ski");
 		
-		printAllSubwords("dragoon");
-		printAllSubwords("boats");
-		printAllSubwords("affidavit");
+		System.out.println("\n-----Subwords-----");
+		printSubwords("dragoon");
+		printSubwords("boats");
+		printSubwords("affidavit");
 		
+		System.out.println("\n-----Most subwords-----");
 		printMostSubwords();
 	}
 	
 	private static void printMostSubwords() {
-//		int max = wordMap.values().stream().mapToInt(set -> set.size()).max().getAsInt();
-//		
-//		wordMap.entrySet().stream().filter(entry -> entry.getValue().size() == max).forEach(System.out::println);
-		
 		wordMap.entrySet().stream()
-				.max(Comparator.comparingInt(i -> i.getValue().size()))
-				.FINISH THIS
+				.collect(Collectors.groupingBy(e -> e.getValue().size(), TreeMap::new, Collectors.toList()))
+				.lastEntry().getValue().forEach(System.out::println);
 	}
 	
-	private static void printAllSubwords(String word) {
+	private static void printSubwords(String word) {
 		System.out.printf("%s => %s%n", word, wordMap.containsKey(word) ? wordMap.get(word) : Collections.emptyList());
 	}
 	
@@ -71,12 +69,12 @@ public class WordFunnel {
 		return false;
 	}
 	
-	private static void initWordMap(Set<String> words) {
-		wordMap = words.stream()
+	private static void initWordMap(Set<String> wordset) {
+		wordMap = wordset.stream()
 				.flatMap(word -> subwords(word)
 						.map(subword -> new SimpleEntry<>(word, subword)))
-				.filter(e -> words.contains(e.getValue()))
-				.collect(Collectors.groupingBy(e -> e.getKey(), Collectors.mapping(e -> e.getValue(), Collectors.toSet())));
+				.filter(e -> wordset.contains(e.getValue()))
+				.collect(Collectors.groupingBy(entry -> entry.getKey(), Collectors.mapping(entry -> entry.getValue(), Collectors.toSet())));
 	}
 	
 	private static Stream<String> subwords(String word) {
