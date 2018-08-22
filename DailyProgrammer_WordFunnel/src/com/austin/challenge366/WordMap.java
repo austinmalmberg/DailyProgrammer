@@ -31,7 +31,7 @@ public class WordMap {
 	
 	private Stream<String> getSubwordsAsStream(String word) {
 		return IntStream.range(0, word.length())
-				.mapToObj(i -> word.substring(0, i) + word.substring(i+1));
+				.mapToObj(i -> new StringBuilder(word).deleteCharAt(i).toString());
 	}
 	
 	/**
@@ -52,5 +52,9 @@ public class WordMap {
 	
 	public Stream<Entry<String, Set<String>>> entrySetAsStream() {
 		return wordMap.entrySet().stream();
+	}
+	
+	public Stream<String> keySetAsStream() {
+		return wordMap.keySet().stream();
 	}
 }
