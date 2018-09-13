@@ -1,32 +1,39 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
+import java.util.Set;
 
 public class MondrianPuzzle {
-
-	private final int canvas_length;
 	
-	// map<key=area, val= map<key=length, val=Square>> 
-	private Map<Integer, Map<Integer, Square>> squares;
+	private Memoization memo;
 	
-	/**
-	 * @param length the length and width of the canvas
-	 */
-	public MondrianPuzzle(int length) {
-		this.canvas_length = length;
-		
-//		squares = getAreaMap(length);
+	public MondrianPuzzle() {
+		memo = new Memoization();
 	}
 	
-	public void solve() {
+	public Set<Rectangle> solve(int canvasLength) {
+		Rectangle canvas = new Rectangle(canvasLength);
 		
-		// generate possible square
-		// cover the canvas in squares
-			// do the squares cover the entire canvas?
-				// add to list
-					// get 
+		memo.add(canvas);
+		
+		return memo.get(canvas).stream().min(new Comparator<Set<Rectangle>>() {
+			
+			@Override
+			public int compare(Set<Rectangle> o1, Set<Rectangle> o2) {
+				return calcScore(o1) - calcScore(o2);
+			}
+		}).orElse(null);
+	}
+	
+	/**
+	 * @return The area of the largest rectangle minus the area of the smallest rectangle
+	 */
+	private int calcScore(Set<Rectangle> set) {
+		if(set.isEmpty()) return Integer.MAX_VALUE;
+		if(set.size() == 1) return set.stream().findFirst().get().getArea() - 0;
+		
+		IntSummaryStatistics stats = set.stream()
+				.mapToInt(Rectangle::getArea).summaryStatistics();
+		
+		return stats.getMax() - stats.getMin();
 	}
 }
