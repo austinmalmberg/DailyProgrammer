@@ -23,7 +23,7 @@ public class Rectangle implements Comparable<Rectangle> {
 	
 	@Override
 	public String toString() {
-		return String.format("(l=%d, h=%d)", length, height);
+		return String.format("[l=%d, h=%d]", length, height);
 	}
 	
 	public Rectangle rotate() { return new Rectangle(height, length); }

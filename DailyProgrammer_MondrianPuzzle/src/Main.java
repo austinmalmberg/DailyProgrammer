@@ -4,6 +4,6 @@ public class Main {
 		MondrianPuzzle puzzle = new MondrianPuzzle();
 		
 		int canvasLength = 4;
-		puzzle.solve(canvasLength).forEach(System.out::println);
+		puzzle.printOptimalSolution(new Rectangle(canvasLength));
 	}	
 }
