@@ -1,19 +1,21 @@
 package com.austin.challenge350e;
 
-public class Book {
+public class Book implements Comparable<Book> {
 	
-	private int width;
-	private String title;
+	int width;
+	String title;
 	
 	public Book(int width, String title) {
 		this.width = width;
 		this.title = title;
 	}
 	
-	public int getWidth() { return width; }
-	public String getTitle() { return title; }
-	
 	public String toString() {
 		return width + " " + title;
+	}
+
+	@Override
+	public int compareTo(Book o1) {
+		return width - o1.width;
 	}
 }
