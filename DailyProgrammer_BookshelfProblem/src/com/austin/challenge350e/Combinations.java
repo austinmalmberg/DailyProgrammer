@@ -1,54 +1,43 @@
 package com.austin.challenge350e;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Combinations {
 	
-	public Combinations() { }
+	public Combinations() {}
 	
-	
-	public <E> List<List<E>> find(List<E> list) {
-		return find(list, new ArrayList<E>());
-	}
-	private <E> List<List<E>> find(List<E> combos, List<E> list) {
-		for(int i = 0; i < list.size(); i++) {
-			
-		}
-		return null;
+	public <T> Stream<List<T>> getAsStream(List<T> list) {
+		return generate(list);
 	}
 	
-	public List<List<Integer>> combo1(List<Integer> in, List<Integer> list) {
-		Queue<Integer> li = new ArrayDeque<>();
-		
-		/*
-		 * {1,2,3,4}
-		 * 
-		 * 1
-		 * 1,2  1,3  1,4
-		 * 1,2,3  1,2,4
-		 * 1,2,3,4			last index
-		 * 
-		 * 2
-		 * 2,3 2,4
-		 * 2,3,4 			last index
-		 * 
-		 * 3
-		 * 3,4				last index
-		 * 
-		 * 4
-		 * 
-		 */
-		
-		/* Takes INTS = {1,2,3}
-		 * 
-		 * Put INTS in stack
-		 * Add stack to LIST
-		 * pop out 
-		 * 
-		 */
-		
+	public <T> List<List<T>> get(List<T> list) {
+		return generate(list).collect(Collectors.toList());
+	}
+	
+	public <T> List<List<T>> get(List<T> list, int elements) {
+		return generate(list)
+				.filter(l -> l.size() == elements)
+				.collect(Collectors.toList());
+	}
+	
+	private <T> Stream<List<T>> generate(List<T> list) {
+		return generate(list, Collections.emptyList());
+	}
+
+	private <T> Stream<List<T>> generate(List<T> list, List<T> combo) {
+		return IntStream.range(0, list.size()).boxed()
+				.flatMap(i -> {
+					List<T> newCombo = createNewCombo(combo, list.get(i));
+					return Stream.concat(Stream.of(newCombo),
+							generate(list.subList(i+1, list.size()), newCombo).parallel());
+				});
+	}
+
+	private <T> List<T> createNewCombo(List<T> combo, T t) {
+		return Stream.concat(combo.stream(), Stream.of(t)).collect(Collectors.toList());
 	}
 }

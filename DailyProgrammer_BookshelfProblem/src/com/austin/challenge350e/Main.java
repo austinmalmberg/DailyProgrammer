@@ -3,26 +3,59 @@ package com.austin.challenge350e;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
 	
+	private static Combinations combos = new Combinations();
+	
+	private static List<Book> books;	
+	
 	public static void main(String[] args) {
 		
-		String[] file = getFile("example2.txt");
-		BookshelfProblem bsp = new BookshelfProblem(file);
+		String[] file = getFile("challenge.txt");
 		
-		bsp.minimumShelves();
+		Stack<Integer> availableShelves = Arrays.stream(file[0].split("\\s+"))
+				.map(str -> Integer.parseInt(str))
+				.sorted()
+				.collect(Collectors.toCollection(Stack::new));
 		
-		Combinations combo = new Combinations();
+		books = Arrays.stream(file).skip(1)
+				.map(raw -> raw.split("\\s+"))
+				.map(raw_arr -> new Book(Integer.parseInt(raw_arr[0]), raw_arr[1]))
+				.collect(Collectors.toList());
 		
-		List<Integer> test = IntStream.rangeClosed(1, 3).boxed().collect(Collectors.toList());
+		List<Shelf> shelves = new ArrayList<>();
+		
+		while(!books.isEmpty()) {
+			Shelf newShelf = fillShelf(availableShelves.pop(), books);
+			
+			if(newShelf.isEmpty()) {
+				System.out.println("Impossible.");
+				return;
+			}
+			
+			shelves.add(newShelf);
+		}
 		
 		
-		System.out.println(combo.comb2("abc"));
+		// output
+		shelves.forEach(System.out::println);
+	}
+	
+	public static Shelf fillShelf(int shelfSize, List<Book> remainingBooks) {
+		List<Book> booksOnShelf = combos.getAsStream(remainingBooks).filter(collection -> Shelf.widthOfBooks(collection) <= shelfSize)
+				.max(Comparator.comparing(books -> Shelf.widthOfBooks(books))).orElse(Collections.emptyList());
+		
+		books.removeAll(booksOnShelf);
+		
+		return new Shelf(shelfSize, booksOnShelf);
 	}
 	
 	public static String[] getFile(String fileName) {
