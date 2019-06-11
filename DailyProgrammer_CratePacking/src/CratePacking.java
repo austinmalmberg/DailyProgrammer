@@ -99,6 +99,8 @@ public class CratePacking {
 				IntStream.of(Arrays.copyOfRange(arr, 0, pos))).toArray();
 	}
 	
+	// for testing purposes
+	@SuppressWarnings("unused")
 	private void printRotations(int[] is) {
 		// iterates through examples and prints each rotation of the arrays
 		IntStream.range(0, is.length)

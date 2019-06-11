@@ -39,24 +39,43 @@ public class Main
 				{123, 456, 789, 1011, 1213, 1415, 16, 17, 18, 19, 20, 21}
 		};
 		 
-		CratePacking pack = new CratePacking();
+//		CratePacking pack = new CratePacking();
+//		
+//		System.out.println("----- NO ROTATION -----");
+//		Stream.of(examples2DRotationNone).forEach(pack::displayMaxBoxes);
+//		
+//		
+//		pack.setRotation(CratePacking.ALL_ROTATE);
+//		
+//		
+//		System.out.println("----- ALL ROTATION -----");
+//		Stream.of(examples2DRotationAll).forEach(pack::displayMaxBoxes);
+//		
+//		
+//		System.out.println("----- ALL ROTATION | 3D -----");
+//		Stream.of(examples3D).forEach(pack::displayMaxBoxes);
+//		
+//		System.out.println("----- ALL ROTATION | ND -----");
+//		Stream.of(examplesND).forEach(pack::displayMaxBoxes);
 		
+		PackageController packControl = new PackageController();
 		System.out.println("----- NO ROTATION -----");
-		Stream.of(examples2DRotationNone).forEach(pack::displayMaxBoxes);
+		Stream.of(examples2DRotationNone).forEach(ex -> {
+			
+			int half = Math.floorDiv(ex.length, 2) + (ex.length % 2 == 0 ? 0 : 1);
+			
+			int[] crateDimensions = Arrays.copyOfRange(ex, 0, half);
+			int[] boxDimensions = Arrays.copyOfRange(ex, half, ex.length);
+			
+			System.out.println(packControl.maxBoxesInCrate(crateDimensions, boxDimensions));
+		});
 		
+		int[] example = { 12, 15, 6, 17, 3 };
+		System.out.println(Arrays.toString(example));
 		
-		pack.setRotation(CratePacking.ALL_ROTATE);
+		packControl.cascadeSwap(example, 0, 3);
 		
-		
-		System.out.println("----- ALL ROTATION -----");
-		Stream.of(examples2DRotationAll).forEach(pack::displayMaxBoxes);
-		
-		
-		System.out.println("----- ALL ROTATION | 3D -----");
-		Stream.of(examples3D).forEach(pack::displayMaxBoxes);
-		
-		System.out.println("----- ALL ROTATION | ND -----");
-		Stream.of(examplesND).forEach(pack::displayMaxBoxes);
+		System.out.println(Arrays.toString(example));
 	}
 	
 	public static int[] rotateCopy(int[] arr, int pos)
