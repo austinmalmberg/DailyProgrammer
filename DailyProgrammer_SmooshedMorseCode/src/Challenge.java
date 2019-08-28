@@ -10,7 +10,8 @@ import java.util.stream.Stream;
 
 /**
  * 
- * https://www.reddit.com/r/dailyprogrammer/comments/cmd1hb/20190805_challenge_380_easy_smooshed_morse_code_1/
+ * Easy: https://www.reddit.com/r/dailyprogrammer/comments/cmd1hb/20190805_challenge_380_easy_smooshed_morse_code_1/
+ * Intermediate: https://www.reddit.com/r/dailyprogrammer/comments/cn6gz5/20190807_challenge_380_intermediate_smooshed/
  * 
  * @author Austin Malmberg
  *
@@ -41,8 +42,27 @@ public class Challenge {
 	
 	/* PUBLIC METHODS */
 	
-	public void examples() {
-		System.out.println("\n><><>< EXAMPLES ><><><");
+	/* EASY */
+	
+	public void printEasyChallenges() {
+		
+		examplesEasy();
+		
+		/* OPTIONAL BONUSES */
+		
+		nDifferentWords(13);
+		
+		nConsecutiveDashes(15);
+		
+		perfectlyBalancedWords(21);
+		
+		nLengthPalindrome(13);
+		
+		findUnusedSubsequences(13);
+	}
+	
+	public void examplesEasy() {
+		System.out.println("\n\n>>>>>> EXAMPLES >>>>>>\n");
 		
 		String[] examples = { "sos", "daily", "programmer", "bits", "three"	};
 		
@@ -57,7 +77,7 @@ public class Challenge {
 	 * @param i the number of words that use the same mcs 
 	 */
 	public void nDifferentWords(int i) {
-		System.out.println("\n><><>< MORSE CODE SEQUENCE FOR " + i + " DIFFERENT WORDS ><><><");
+		System.out.println("\n\n>>>>>> MORSE CODE SEQUENCE FOR " + i + " DIFFERENT WORDS >>>>>>\n");
 		mcsMap.entrySet().stream()
 				.filter(entry -> entry.getValue().size() == i)
 				.forEach(this::formatAndPrintEntry);
@@ -69,7 +89,7 @@ public class Challenge {
 	 * @param i the number of consecutive dashes
 	 */
 	public void nConsecutiveDashes(int i) {
-		System.out.println("\n><><>< MORSE CODE SEQUENCE WITH " + i + " CONSECUTIVE DASHES ><><><");
+		System.out.println("\n\n>>>>>> MORSE CODE SEQUENCE WITH " + i + " CONSECUTIVE DASHES >>>>>>\n");
 		mcsMap.entrySet().stream()
 				.filter(entry -> consecutiveDashes(entry.getKey()) == i)
 				.forEach(this::formatAndPrintEntry);;
@@ -81,7 +101,7 @@ public class Challenge {
 	 * @param len the length of the word to find
 	 */
 	public void perfectlyBalancedWords(int len) {
-		System.out.println("\n><><>< " + len + "-LETTER WORDS WITH PERFECTLY BALANCED MORSE CODE SEQUENCES ><><><");
+		System.out.println("\n\n>>>>>> " + len + "-LETTER WORDS WITH PERFECTLY BALANCED MORSE CODE SEQUENCES >>>>>>\n");
 		mcsMap.keySet().stream()
 			.filter(this::perfectlybalanced)
 			.flatMap(key -> mcsMap.get(key).stream()
@@ -97,7 +117,7 @@ public class Challenge {
 	 * @param len the length of the word to find
 	 */
 	public void nLengthPalindrome(int len) {
-		System.out.println("\n><><>< " + len + "-LETTER WORDS WHOSE MORSE CODE SEQUENCE IS A PALINDROME ><><><");
+		System.out.println("\n\n>>>>>> " + len + "-LETTER WORDS WHOSE MORSE CODE SEQUENCE IS A PALINDROME >>>>>>\n");
 		mcsMap.keySet().stream()
 			.filter(this::isPalindrome)
 			.flatMap(key -> mcsMap.get(key).stream()
@@ -114,7 +134,7 @@ public class Challenge {
 	 */
 	public void findUnusedSubsequences(int len) {
 		
-		System.out.println("\n><><>< UNUSED DOT/DASH SUB-SEQUENCES WITH " + len + " CHARACTERS ><><><");
+		System.out.println("\n\n>>>>>> UNUSED DOT/DASH SUB-SEQUENCES WITH " + len + " CHARACTERS >>>>>>\n");
 		generateSequencesAsStream(len)
 				.filter(seq -> !inMCSKeySet(seq))
 				.forEach(System.out::println);
@@ -191,19 +211,49 @@ public class Challenge {
 		}
 	}
 	
+	/* INTERMEDIATE */
+	
+	public void printIntermediateChallenges() {
+
+		smorse.alphaResultsAsStream(".----...---.-....--.-.....")
+				.findFirst().ifPresent(System.out::println);
+		
+//		examplesIntermediate();
+	}
+	
+	public void examplesIntermediate() {
+		
+//		String[] examples = { ".--...-.-.-.....-.--........----.-.-..---.---.--.--.-.-....-..-...-.---..--.----..", // => "wirnbfzehatqlojpgcvusyxkmd"
+//				".----...---.-....--.-........-----....--.-..-.-..--.--...--..-.---.--..-.-...--..-", // => "wzjlepdsvothqfxkbgrmyicuna"
+//				"..-...-..-....--.---.---.---..-..--....-.....-..-.--.-.-.--.-..--.--..--.----..-.." // => "uvfsqmjazxthbidyrkcwegponl"
+//		};
+		
+		String[] examples = {
+				".--...-.-.-.....-.--........----.-."
+		};
+		
+		for (String ex : examples) {
+			System.out.printf("\n\n>>>>>> EXAMPLES >>>>>>\n", ex);
+			smorse.asAlpha(ex).stream().forEach(System.out::println);
+		}
+	}
+	
 	/* MAIN METHOD */
 	
 	public static void main(String[] args) {
 		Challenge challenge = new Challenge();
 		
-		challenge.examples();
+		/* EASY */
 		
-		/* OPTIONAL BONUSES */
+//		challenge.printEasyChallenges();
 		
-		challenge.nDifferentWords(13);
-		challenge.nConsecutiveDashes(15);
-		challenge.perfectlyBalancedWords(21);
-		challenge.nLengthPalindrome(13);
-		challenge.findUnusedSubsequences(13);
+		/* INTERMEDIATE */
+		
+		challenge.printIntermediateChallenges();
+		
+		/* INTERMEDIATE OPTIONAL BONUS 2 */
+		
+		/* INTERMEDIATE OPTIONAL BONUS 2 */
 	}
+	
 }
